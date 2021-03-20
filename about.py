@@ -33,7 +33,6 @@ class TestWindow(tk.Tk):
 
 
 if __name__ == '__main__':
-
     w = TestWindow()
     AboutMe(w)
     w.mainloop()        
