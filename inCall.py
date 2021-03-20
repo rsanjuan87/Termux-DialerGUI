@@ -1,17 +1,16 @@
 
 import tkinter as tk
 from about import AboutMe
-from about import TestWindow
-import sys as sys
-
+from utils import TestWindow
+import os
+import threading
+import subprocess
 
 WHITE = "#F8F8F8" # black/white
 TAN = "#F1EABC" # black/tan
-GREEN = "#00AA00" # green
+RED = "#AA0000" # green
 BACK='#272533'
 CALL_TEXT="✆"
-RECENT_TEXT='⏱'
-ABOUT_TEXT='❓'
 
 
 class InCall(tk.Toplevel):
@@ -27,9 +26,7 @@ class InCall(tk.Toplevel):
         self.master = master
         self.lbl = tk.Label(self, text=number, anchor='e', bg=BACK, fg='white', font=('Franklin Gothic Book', 48, 'bold'))
         self.lbl.grid(row=0, sticky='ew', padx=4, pady=2, )
-        self.end_call_btn = self.std_btn(CALL_TEXT, 'red', 10, 1)
-        
-        #tests
+        self.end_call_btn = self.std_btn(CALL_TEXT, RED, 10, 1)
 
     def about_me(self):
         """Application and license info"""
@@ -37,8 +34,9 @@ class InCall(tk.Toplevel):
 
     def close(self):
         """Close window"""
-        self.master.incall = None
-        #self.master.focus_set()
+        self.master.wait = None
+        #todo find better way to end call
+        subprocess.check_output(["termux-telephony-call", '1'])
         self.destroy()
 
     def std_btn(self, text, bg, row, col, width=7, height=2, font=('Franklin Gothic Book', 24)):

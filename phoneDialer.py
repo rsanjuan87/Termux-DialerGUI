@@ -2,6 +2,9 @@
 import tkinter as tk
 from about import AboutMe
 from inCall import InCall
+import subprocess
+import os
+import utils as utils
 
 
 WHITE = "#F8F8F8" # black/white
@@ -15,7 +18,7 @@ ABOUT_TEXT='❓'
 
 class PhoneDialer(tk.Tk):
 
-    incall = None
+    wait = None
 
     def __init__(self):
         super().__init__()
@@ -34,7 +37,7 @@ class PhoneDialer(tk.Tk):
         self.fav3 = self.createFav('', 3)
         self.fav3 = self.createFav('', 4)
 
-        self.number = tk.Text(self, width=7, height=2, font=('Franklin Gothic Book', 24), bg='black', fg='gray')
+        self.number = tk.Text(self, width=7, height=2, font=('Franklin Gothic Book', 18), bg='black', fg='gray')
         self.number.grid(row=5, columnspan=2, sticky='ew', padx=4, pady=2)
         
         self.std_btn("<", BACK, 5, 2)
@@ -60,7 +63,7 @@ class PhoneDialer(tk.Tk):
         """Close window"""
         self.destroy()
 
-    def std_btn(self, text, bg, row, col, width=7, height=2, font=('Franklin Gothic Book', 24)):
+    def std_btn(self, text, bg, row, col, width=7, height=2, font=('Franklin Gothic Book', 18)):
         btn = tk.Button(self, text=text, bg=bg, width=width, height=height, font=font, command=lambda: self.event_click(text))
         return btn.grid(row=row, column=col, padx=4, pady=4)
 
@@ -69,7 +72,7 @@ class PhoneDialer(tk.Tk):
         return lbl.grid(row=r, columnspan=4, sticky='ew', padx=4, pady=2, )
 
     def event_click(self, event):
-        if self.incall == None:
+        if self.wait == None:
             if event in ['<']:
                 self.back_space()
             if event in ['0','1','2','3','4','5','6','7','8','9','*','#']:
@@ -104,13 +107,21 @@ class PhoneDialer(tk.Tk):
         
 
     def call_number(self):
-        self.incall = InCall(self, self.number.get(1.0, tk.END))
-        self.incall.mainloop()
+        num = self.number.get(1.0, tk.END).replace('\n', '')
+        a = subprocess.check_output(["termux-telephony-call", num])
+        if len(a)<=1 :
+            self.wait = InCall(self,num )
+        else :
+            self.wait = EOFError(a)
+            utils.Utils.showError(self, a)
 
     def recent(self):
         print('recent')    
    
 
 if __name__ == '__main__':
+    #if not os.path.isfile(os.environ['PREFIX']+'/bin/termux-telephony-call'):
+	#    print('Please Use Termux For This Caller\n\tMake Sure You Installed Termux:API\n\t\tpkg install termux-api')
+    #    exit(code= 1)
     w = PhoneDialer()
     w.mainloop()        

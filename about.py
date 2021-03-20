@@ -4,6 +4,7 @@
 import tkinter as tk
 from tkinter.ttk import Separator
 import pathlib
+from utils import TestWindow
 
 class AboutMe(tk.Toplevel):
     """About Me popup widow to display general application description"""
@@ -21,15 +22,6 @@ class AboutMe(tk.Toplevel):
         """Close window"""
         #self.master.focus_set()
         self.destroy()
-
-class TestWindow(tk.Tk):
-    """A window used for testing the various module dialogs"""
-    def __init__(self):
-        super().__init__()
-        self.title('Testing Window')
-        self.text = tk.Text(self)
-        self.text.pack(fill=tk.BOTH, expand=tk.YES)
-        self.text.insert(tk.END, 'This is a test. This is only a test.')
 
 
 if __name__ == '__main__':
