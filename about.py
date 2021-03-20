@@ -13,13 +13,13 @@ class AboutMe(tk.Toplevel):
         self.transient(master)
         self.title('About')
         self.resizable(False, False)
-        self.wm_attributes('-topmost', 'true', '-toolwindow', 'true')
+        #self.wm_attributes('-toolwindow', 'true')
         self.protocol("WM_DELETE_WINDOW", self.close)
         self.focus_set()
 
     def close(self):
         """Close window"""
-        self.master.focus_set()
+        #self.master.focus_set()
         self.destroy()
 
 class TestWindow(tk.Tk):

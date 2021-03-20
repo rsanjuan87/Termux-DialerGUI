@@ -1,6 +1,7 @@
 
 import tkinter as tk
 from about import AboutMe
+from inCall import InCall
 
 
 WHITE = "#F8F8F8" # black/white
@@ -14,12 +15,14 @@ ABOUT_TEXT='❓'
 
 class PhoneDialer(tk.Tk):
 
+    incall = None
+
     def __init__(self):
         super().__init__()
         self.transient()
         self.resizable(False, False)
-        #self.wm_attributes(-toolwindow', 'true')
-        #self.protocol("WM_DELETE_WINDOW", self.close)
+        #self.wm_attributes('-toolwindow', 'true')
+        self.protocol("WM_DELETE_WINDOW", self.close)
         self.title('PhoneDialer')
         self.config(bg=BACK)
 
@@ -40,11 +43,14 @@ class PhoneDialer(tk.Tk):
         self.std_btn("4", WHITE, 7, 0), self.std_btn("5", WHITE, 7, 1), self.std_btn("6", WHITE, 7, 2), 
         self.std_btn("7", WHITE, 8, 0), self.std_btn("8", WHITE, 8, 1), self.std_btn("9", WHITE, 8, 2), 
         self.std_btn("*", TAN, 9, 0), self.std_btn("0", WHITE, 9, 1), self.std_btn("#", TAN, 9, 2)
-        self.std_btn(ABOUT_TEXT, TAN, 10, 0), self.std_btn(CALL_TEXT, WHITE, 10, 1), self.std_btn(RECENT_TEXT, TAN, 10, 2)
+        self.std_btn(ABOUT_TEXT, TAN, 10, 0), 
+        self.std_btn(CALL_TEXT, GREEN, 10, 1), 
+        self.std_btn(RECENT_TEXT, TAN, 10, 2)
  
         self.number.focus_set() 
 
         #tests
+        self.number.insert(1.0, '123456789')
 
     def about_me(self):
         """Application and license info"""
@@ -52,7 +58,6 @@ class PhoneDialer(tk.Tk):
 
     def close(self):
         """Close window"""
-        self.master.focus_set()
         self.destroy()
 
     def std_btn(self, text, bg, row, col, width=7, height=2, font=('Franklin Gothic Book', 24)):
@@ -64,16 +69,17 @@ class PhoneDialer(tk.Tk):
         return lbl.grid(row=r, columnspan=4, sticky='ew', padx=4, pady=2, )
 
     def event_click(self, event):
-        if event in ['<']:
-            self.back_space()
-        if event in ['0','1','2','3','4','5','6','7','8','9','*','#']:
-            self.number_click(event)
-        if event == CALL_TEXT:
-            self.call_number()
-        if event == RECENT_TEXT:
-            self.recent()
-        if event == ABOUT_TEXT:
-            self.about_me()
+        if self.incall == None:
+            if event in ['<']:
+                self.back_space()
+            if event in ['0','1','2','3','4','5','6','7','8','9','*','#']:
+                self.number_click(event)
+            if event == CALL_TEXT and len(self.number.get(1.0, tk.END))>1:
+                self.call_number()
+            if event == RECENT_TEXT:
+                self.recent()
+            if event == ABOUT_TEXT:
+                self.about_me()
 
 
     # click events
@@ -98,12 +104,12 @@ class PhoneDialer(tk.Tk):
         
 
     def call_number(self):
-        #call
-        self.showCalling()
+        self.incall = InCall(self, self.number.get(1.0, tk.END))
+        self.incall.mainloop()
 
-    def showCalling(self):
-        #todo    
-        self.destroy()
+    def recent(self):
+        print('recent')    
+   
 
 if __name__ == '__main__':
     w = PhoneDialer()
