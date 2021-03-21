@@ -5,6 +5,7 @@ from inCall import InCall
 import subprocess
 import os
 import utils as utils
+from utils import MessageDialog
 
 
 WHITE = "#F8F8F8" # black/white
@@ -29,7 +30,7 @@ class PhoneDialer(tk.Tk):
         self.title('PhoneDialer')
         self.config(bg=BACK)
 
-        self.lbl = tk.Label(self, text='Recent 4', anchor='e', bg=BACK, fg='white', font=('Franklin Gothic Book', 14, 'bold'))
+        self.lbl = tk.Label(self, text='Recent 4', anchor='e', bg=BACK, fg='white', font=('Franklin Gothic Book', 14))
         self.lbl.grid(row=0, columnspan=4, sticky='ew', padx=4, pady=2, )
 
         self.fav1 = self.createFav('', 1)
@@ -37,7 +38,7 @@ class PhoneDialer(tk.Tk):
         self.fav3 = self.createFav('', 3)
         self.fav3 = self.createFav('', 4)
 
-        self.number = tk.Text(self, width=7, height=2, font=('Franklin Gothic Book', 18), bg='black', fg='gray')
+        self.number = tk.Text(self, width=7, height=2, font=('Franklin Gothic Book', 18), bg=BACK, fg='gray')
         self.number.grid(row=5, columnspan=2, sticky='ew', padx=4, pady=2)
         
         self.std_btn("<", BACK, 5, 2)
@@ -51,9 +52,9 @@ class PhoneDialer(tk.Tk):
         self.std_btn(RECENT_TEXT, TAN, 10, 2)
  
         self.number.focus_set() 
+        self.checkDependencies()
 
         #tests
-        self.number.insert(1.0, '123456789')
 
     def about_me(self):
         """Application and license info"""
@@ -68,11 +69,11 @@ class PhoneDialer(tk.Tk):
         return btn.grid(row=row, column=col, padx=4, pady=4)
 
     def createFav(self, text, r):
-        lbl = tk.Label(self, text=text, anchor='e', bg=BACK, fg='white', font=('Franklin Gothic Book', 14, 'bold'))
+        lbl = tk.Label(self, text=text, anchor='e', bg=BACK, fg='white', font=('Franklin Gothic Book', 14))
         return lbl.grid(row=r, columnspan=4, sticky='ew', padx=4, pady=2, )
 
     def event_click(self, event):
-        if self.wait == None:
+        if self.checkDependencies() and self.wait == None:
             if event in ['<']:
                 self.back_space()
             if event in ['0','1','2','3','4','5','6','7','8','9','*','#']:
@@ -118,10 +119,22 @@ class PhoneDialer(tk.Tk):
     def recent(self):
         print('recent')    
    
+    def checkDependencies(self):
+        "chek if needed dependecies are instaled and return if are satisfacied"
+        deps = ['termux-telephony-call', 'termux-call-log']
+        complete = True
+        pref = ''
+        if not os.getenv('PREFIX') == None :
+            pref = os.getenv('PREFIX') 
+        for d in deps:
+            if not os.path.isfile(pref+'/bin/'+d):
+                complete = False
+                break
+        if not complete:
+            MessageDialog(self, 'Please Use Termux For This Caller\nMake Sure You Installed Termux:API\n\tpkg install termux-api',  'Error', )
+        return complete
 
 if __name__ == '__main__':
-    #if not os.path.isfile(os.environ['PREFIX']+'/bin/termux-telephony-call'):
-	#    print('Please Use Termux For This Caller\n\tMake Sure You Installed Termux:API\n\t\tpkg install termux-api')
-    #    exit(code= 1)
     w = PhoneDialer()
     w.mainloop()        
+    
