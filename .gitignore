@@ -3,3 +3,8 @@
 __pycache__/*
 main.py
 ._main.py
+termux-call-log
+termux-telephony-call
+info.json
+._*
+.vscode/*

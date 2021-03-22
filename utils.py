@@ -3,6 +3,18 @@ import tkinter as tk
 from tkinter.ttk import Separator
 import pathlib
 
+
+
+WHITE = "#F8F8F8" # black/white
+TAN = "#F1EABC" # black/tan
+GREEN = "#00AA00" # green
+BACK='#272533'
+RED = '#AA0000'
+CALL_TEXT="✆"
+RECENT_TEXT='⏱'
+ABOUT_TEXT='❓'
+BACKSPACE_TEXT = '⌫'
+
 class Utils():
     def showError(self, error):
         "mostrara el error en cuestion"
@@ -22,7 +34,7 @@ class MessageDialog(tk.Toplevel):
         self.protocol("WM_DELETE_WINDOW", self.close)
         self.title(title)
         self.master = master
-        tk.Label(self, text=text, anchor='e').grid(row=0, columnspan=2, sticky='ew', padx=4, pady=2, )
+        tk.Label(self, text=text).grid(row=0, columnspan=2, padx=4, pady=2, )
         tk.Button(self, text='Ok', command=lambda: self.close()).grid(row=1, column=1, padx=4, pady=2)
 
     def close(self):
