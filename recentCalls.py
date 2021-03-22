@@ -49,7 +49,7 @@ class RecentCallsPage(tk.Toplevel):
         self.title('PhoneDialer')
         self.config(bg=utils.BACK)
 
-        self.lbl = tk.Label(self, text='Recent 10', anchor='e', bg=utils.BACK, fg='white', font=('Franklin Gothic Book', 14))
+        self.lbl = tk.Label(self, text='Recent 10', anchor='e', bg=utils.BACK, fg=utils.FRONT, font=('Franklin Gothic Book', 14))
         self.lbl.grid(row=0, columnspan=4, sticky='ew', padx=4, pady=2, )
 
         self.lista = tk.Label(self, text='asdasd')

@@ -19,7 +19,7 @@ class InCall(tk.Toplevel):
         self.title('PhoneDialer')
         self.config(bg=utils.BACK)
         self.master = master
-        self.lbl = tk.Label(self, text=number, anchor='e', bg=utils.BACK, fg='white', font=('Franklin Gothic Book', 48, 'bold'))
+        self.lbl = tk.Label(self, text=number, anchor='e', bg=utils.BACK, fg=utils.FRONT, font=('Franklin Gothic Book', 48, 'bold'))
         self.lbl.grid(row=0, sticky='ew', padx=4, pady=2, )
         self.end_call_btn = self.std_btn(utils.CALL_TEXT, utils.RED, 10, 1)
 

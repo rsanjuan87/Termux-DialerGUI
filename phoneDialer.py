@@ -29,15 +29,15 @@ class PhoneDialerPage(tk.Tk):
 
         self.fillRecent()#row1
 
-        self.number = tk.Text(self, width=7, height=2, font=('Franklin Gothic Book', 12), bg=utils.BACK, fg='gray')
+        self.number = tk.Text(self, width=7, height=2, font=('Franklin Gothic Book', 12), bg=utils.BACK, fg=utils.FRONT)
         self.number.grid(row=2, columnspan=2, sticky='ew', padx=4, pady=2)
         
-        self.std_btn(utils.BACKSPACE_TEXT, utils.BACK, 2, 2, fg=utils.WHITE)
+        self.std_btn(utils.BACKSPACE_TEXT, utils.BACK, 2, 2, fg=utils.FRONT)
     
-        self.std_btn("1", utils.WHITE, 3, 0), self.std_btn("2", utils.WHITE, 3, 1), self.std_btn("3", utils.WHITE, 3, 2), 
-        self.std_btn("4", utils.WHITE, 4, 0), self.std_btn("5", utils.WHITE, 4, 1), self.std_btn("6", utils.WHITE, 4, 2), 
-        self.std_btn("7", utils.WHITE, 5, 0), self.std_btn("8", utils.WHITE, 5, 1), self.std_btn("9", utils.WHITE, 5, 2), 
-        self.std_btn("*", utils.TAN, 6, 0), self.std_btn("0", utils.WHITE, 6, 1), self.std_btn("#", utils.TAN, 6, 2)
+        self.std_btn("1", utils.FRONT, 3, 0), self.std_btn("2", utils.FRONT, 3, 1), self.std_btn("3", utils.FRONT, 3, 2), 
+        self.std_btn("4", utils.FRONT, 4, 0), self.std_btn("5", utils.FRONT, 4, 1), self.std_btn("6", utils.FRONT, 4, 2), 
+        self.std_btn("7", utils.FRONT, 5, 0), self.std_btn("8", utils.FRONT, 5, 1), self.std_btn("9", utils.FRONT, 5, 2), 
+        self.std_btn("*", utils.TAN, 6, 0), self.std_btn("0", utils.FRONT, 6, 1), self.std_btn("#", utils.TAN, 6, 2)
         self.std_btn(utils.ABOUT_TEXT, utils.TAN, 7, 0), 
         self.std_btn(utils.CALL_TEXT, utils.GREEN, 7, 1), 
         self.std_btn(utils.RECENT_TEXT, utils.TAN, 7, 2)
