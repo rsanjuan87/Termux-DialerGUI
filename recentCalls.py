@@ -9,29 +9,34 @@ from utils import MessageDialog
 from json import JSONDecoder, JSONDecodeError
 
 
-def RecentCallView(self, r, textvar1, textvar2, fg='black', bg='white'):
+def RecentCallView(self, r, json={}, fg='black', bg='white', func=lambda text: print(text)):
     ''
     frm = tk.Frame(self, bg=bg)
+    s = '⬇️'
+    if str(json['type']) == 'OUTGOING':
+        s = '⬆️'
+    name = json['name']
+    if name == 'UNKNOWN_CALLER' :
+        name = json['phone_number']
+    textvar1 = tk.StringVar(value = name+' '+json['duration']+' '+s)
+    textvar2 = tk.StringVar(value = json['phone_number']+' '+json['date'])
     lbl1 = tk.Label(frm, textvariable= textvar1, anchor='e', bg=bg, fg=fg, font=('Franklin Gothic Book', 14),)
     lbl1.grid(row=0, sticky='e')
     lbl2 = tk.Label(frm,textvariable= textvar2, anchor='e', bg=bg, fg=fg, font=('Franklin Gothic Book', 10))
     lbl2.grid(row=1, sticky='e')
+    frm.bind("<Button-1>", func=lambda text: func(json['phone_number']))
+    lbl1.bind("<Button-1>", func=lambda text: func(json['phone_number']))
+    lbl2.bind("<Button-1>", func=lambda text: func(json['phone_number']))
     return frm.grid(row=r, columnspan=4, sticky='e', padx=4, pady=2, ) 
 
-def RecentListView(self, json='[]', row=0, fg='black', bg='white'):
+def RecentListView(self, json='[]', row=0, fg='black', bg='white', func=lambda text: print(text) ):
     ''
     frm = tk.Frame(self, bg=bg)
     frm.grid(row=row, columnspan=4, sticky='e', padx=4, pady=2, )
     j = JSONDecoder().decode(json)
     total = len(j)
     for i in range(0, total):
-        s = '⬇️'
-        if str(j[i]['type']) == 'OUTGOING':
-            s = '⬆️'
-        name = j[i]['name']
-        if name == 'UNKNOWN_CALLER' :
-            name = j[i]['phone_number']
-        RecentCallView(frm, total-i, tk.StringVar(value = name+' '+j[i]['duration']+' '+s), tk.StringVar(value = j[i]['phone_number']+' '+j[i]['date']), fg= fg, bg=bg)
+        RecentCallView(frm, total-i, j[i], fg= fg, bg=bg, func= lambda text: func(text) )
     return frm
 
 class RecentCallsPage(tk.Toplevel):
@@ -46,7 +51,7 @@ class RecentCallsPage(tk.Toplevel):
         self.master = master
         #self.wm_attributes('-toolwindow', 'true')
         self.protocol("WM_DELETE_WINDOW", self.close)
-        self.title('PhoneDialer')
+        self.title('Recent calls')
         self.config(bg=utils.BACK)
 
         self.lbl = tk.Label(self, text='Recent 10', anchor='e', bg=utils.BACK, fg=utils.FRONT, font=('Franklin Gothic Book', 14))
@@ -77,7 +82,7 @@ class RecentCallsPage(tk.Toplevel):
         print(text)
 
     def fillRecent(self):
-        a = str(subprocess.check_output(["termux-call-log", "-l", '10', '-o', str(self.offset)]))
+        a = str(subprocess.check_output(['/bin/sh','/Volumes/Datos/_Projects/+python/PhoneDialer/termux-call-log']))#["termux-call-log", "-l", '10', '-o', str(self.offset)]))
         if a.__contains__('error'):
             self.wait = EOFError(a)
             utils.Utils.showError(self, a)

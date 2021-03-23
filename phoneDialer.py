@@ -27,8 +27,6 @@ class PhoneDialerPage(tk.Tk):
         self.lbl = tk.Label(self, text='Recent 4', anchor='e', bg=utils.BACK, fg='white', font=('Franklin Gothic Book', 14))
         self.lbl.grid(row=0, columnspan=4, sticky='ew', padx=4, pady=2, )
 
-        self.fillRecent()#row1
-
         self.number = tk.Text(self, width=7, height=2, font=('Franklin Gothic Book', 12), bg=utils.BACK, fg=utils.FRONT)
         self.number.grid(row=2, columnspan=2, sticky='ew', padx=4, pady=2)
         
@@ -46,6 +44,8 @@ class PhoneDialerPage(tk.Tk):
         self.number.focus_set() 
         self.checkDependencies()
 
+        self.fillRecent()#row1
+
         #tests
 
     def about_me(self):
@@ -61,7 +61,7 @@ class PhoneDialerPage(tk.Tk):
         return btn.grid(row=row, column=col, padx=4, pady=4)
 
     def event_click(self, event):
-        if self.checkDependencies() and self.wait == None:
+        #if self.checkDependencies() and self.wait == None:
             if event in [utils.BACKSPACE_TEXT]:
                 self.back_space()
             if event in ['0','1','2','3','4','5','6','7','8','9','*','#']:
@@ -127,14 +127,14 @@ class PhoneDialerPage(tk.Tk):
         return complete
 
     def fillRecent(self):
-        if self.checkDependencies():
-            a = str(subprocess.check_output(["termux-call-log", "-l", '4']))#['/bin/sh','/Volumes/Datos/_Projects/+python/PhoneDialer/termux-call-log']))#["termux-call-log", "-l", '4']))
+        #if self.checkDependencies():
+            a = str(subprocess.check_output(['/bin/sh','/Volumes/Datos/_Projects/+python/PhoneDialer/termux-call-log']))#["termux-call-log", "-l", '4']))
             if a.__contains__('error'):
                 self.wait = EOFError(a)
                 utils.Utils.showError(self, a)
             else:
                 a=a.replace('b\'', '').replace('\\n\'','').replace('\\n','').replace('\\','\\\\')
-                RecentListView(self, a, row=1, bg=utils.BACK, fg='white')
+                RecentListView(self, a, row=1, bg=utils.BACK, fg=utils.FRONT, func=lambda text: self.number.replace(1.0, tk.END, text))
 
 
 if __name__ == '__main__':
