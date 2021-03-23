@@ -35,7 +35,7 @@ class InCall(tk.Toplevel):
         self.lbl.grid(row=2, sticky='ew', padx=4, pady=2, )
 
         self.end_call_btn = self.std_btn(utils.CALL_TEXT, utils.RED, 10, 0)
-        a = subprocess.check_output(utils.cmd_call(number))
+        a = str(subprocess.check_output(utils.cmd_call(number)))
         
         if a.__contains__('error'):
             self.wait = EOFError(a)
