@@ -65,7 +65,7 @@ class PhoneDialerPage(tk.Tk):
         """Close window"""
         self.destroy()
 
-    def std_btn(self, text, bg, row, col, width=5, height=2, font=('Franklin Gothic Book', 24), fg='white'):
+    def std_btn(self, text, bg, row, col, width=5, height=2, font=('Franklin Gothic Book', 20), fg='white'):
         btn = tk.Label(self, text=text, anchor='center', bg=bg, fg=fg, font= font, width=width, height= height)
         btn.bind("<Button-1>", func=lambda event: self.event_click(text))
         btn.grid(row=row, column=col, padx=4, pady=4)
@@ -110,13 +110,7 @@ class PhoneDialerPage(tk.Tk):
 
     def call_number(self):
         num = self.number.get(1.0, tk.END).replace('\n', '')
-        a = subprocess.check_output(utils.cmd_call(num))
-        if len(a)<=1 or a.__contains__('error'):
-            self.wait = InCall(self,num )
-            self.fillRecent()
-        else :
-            self.wait = EOFError(a)
-            utils.Utils.showError(self, a)
+        self.wait = InCall(self,num )
 
     def recent(self):
         self.wait = RecentCallsPage(self) 

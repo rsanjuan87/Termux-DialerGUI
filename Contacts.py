@@ -12,8 +12,8 @@ from inCall import InCall
 import json
 from ContactDetails import ContactDetailsView
 
-def Contact(self, jso={}, fg='black', bg='white', onClick=lambda text: print(text)):
-    lbl = tk.Label(self, text=jso['name'], anchor='w', fg=fg, bg=bg)
+def Contact(self, jso={}, fg='black', bg='white', font=('Franklin Gothic Book', 14), onClick=lambda text: print(text)):
+    lbl = tk.Label(self, text=jso['name'], anchor='w', fg=fg, bg=bg, font=font)
     lbl.bind("<Button-1>", func=lambda text: onClick(json.dumps(jso)))
     return lbl
     

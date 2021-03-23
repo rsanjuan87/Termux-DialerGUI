@@ -6,7 +6,7 @@ from config import *
 import os
 import subprocess
 
-testing = True
+testing = False
 
 def recent4():
     if testing:
