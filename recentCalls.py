@@ -9,7 +9,7 @@ from utils import MessageDialog
 from json import JSONDecoder, JSONDecodeError
 
 
-def RecentCallView(self, r, json={}, fg='black', bg='white', func=lambda text: print(text)):
+def RecentCallView(self, r, json={}, fg='black', bg='white', onClick=lambda text: print(text)):
     ''
     frm = tk.Frame(self, bg=bg)
     s = '⬇️'
@@ -24,19 +24,19 @@ def RecentCallView(self, r, json={}, fg='black', bg='white', func=lambda text: p
     lbl1.grid(row=0, sticky='e')
     lbl2 = tk.Label(frm,textvariable= textvar2, anchor='e', bg=bg, fg=fg, font=('Franklin Gothic Book', 10))
     lbl2.grid(row=1, sticky='e')
-    frm.bind("<Button-1>", func=lambda text: func(json['phone_number']))
-    lbl1.bind("<Button-1>", func=lambda text: func(json['phone_number']))
-    lbl2.bind("<Button-1>", func=lambda text: func(json['phone_number']))
+    frm.bind("<Button-1>", func=lambda text: onClick(json['phone_number']))
+    lbl1.bind("<Button-1>", func=lambda text: onClick(json['phone_number']))
+    lbl2.bind("<Button-1>", func=lambda text: onClick(json['phone_number']))
     return frm.grid(row=r, columnspan=4, sticky='e', padx=4, pady=2, ) 
 
-def RecentListView(self, json='[]', row=0, fg='black', bg='white', func=lambda text: print(text) ):
+def RecentListView(self, json='[]', row=0, fg='black', bg='white', onClick=lambda text: print(text) ):
     ''
     frm = tk.Frame(self, bg=bg)
     frm.grid(row=row, columnspan=4, sticky='e', padx=4, pady=2, )
     j = JSONDecoder().decode(json)
     total = len(j)
     for i in range(0, total):
-        RecentCallView(frm, total-i, j[i], fg= fg, bg=bg, func= lambda text: func(text) )
+        RecentCallView(frm, total-i, j[i], fg= fg, bg=bg, onClick = lambda text: onClick(text) )
     return frm
 
 class RecentCallsPage(tk.Toplevel):
@@ -82,14 +82,18 @@ class RecentCallsPage(tk.Toplevel):
         print(text)
 
     def fillRecent(self):
-        a = str(subprocess.check_output(['/bin/sh','/Volumes/Datos/_Projects/+python/PhoneDialer/termux-call-log']))#["termux-call-log", "-l", '10', '-o', str(self.offset)]))
+        a = str(subprocess.check_output(["termux-call-log", "-l", '10', '-o', str(self.offset)]))#['/bin/sh','/Volumes/Datos/_Projects/+python/PhoneDialer/termux-call-log']))#["termux-call-log", "-l", '10', '-o', str(self.offset)]))
         if a.__contains__('error'):
             self.wait = EOFError(a)
             utils.Utils.showError(self, a)
         else:
             a=a.replace('b\'', '').replace('\\n\'','').replace('\\n','').replace('\\','\\\\')
-            self.lista = RecentListView(self, a, row=1, bg=utils.BACK, fg='white')
+            self.lista = RecentListView(self, a, row=1, bg=utils.BACK, fg='white', onClick = lambda text: self.setNumber(text))
             
+    def setNumber(self, text):
+        self.master.number.replace(1.0, tk.END, text)
+        self.close()
+
 
 
 if __name__ == '__main__':

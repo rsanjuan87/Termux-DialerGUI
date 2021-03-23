@@ -128,13 +128,13 @@ class PhoneDialerPage(tk.Tk):
 
     def fillRecent(self):
         #if self.checkDependencies():
-            a = str(subprocess.check_output(['/bin/sh','/Volumes/Datos/_Projects/+python/PhoneDialer/termux-call-log']))#["termux-call-log", "-l", '4']))
+            a = str(subprocess.check_output(["termux-call-log", "-l", '4']))#['/bin/sh','/Volumes/Datos/_Projects/+python/PhoneDialer/termux-call-log']))#["termux-call-log", "-l", '4']))
             if a.__contains__('error'):
                 self.wait = EOFError(a)
                 utils.Utils.showError(self, a)
             else:
                 a=a.replace('b\'', '').replace('\\n\'','').replace('\\n','').replace('\\','\\\\')
-                RecentListView(self, a, row=1, bg=utils.BACK, fg=utils.FRONT, func=lambda text: self.number.replace(1.0, tk.END, text))
+                RecentListView(self, a, row=1, bg=utils.BACK, fg=utils.FRONT, onClick = lambda text: self.number.replace(1.0, tk.END, text))
 
 
 if __name__ == '__main__':
