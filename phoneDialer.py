@@ -61,7 +61,7 @@ class PhoneDialerPage(tk.Tk):
         return btn.grid(row=row, column=col, padx=4, pady=4)
 
     def event_click(self, event):
-        #if self.checkDependencies() and self.wait == None:
+        if self.checkDependencies() and self.wait == None:
             if event in [utils.BACKSPACE_TEXT]:
                 self.back_space()
             if event in ['0','1','2','3','4','5','6','7','8','9','*','#']:
@@ -127,7 +127,7 @@ class PhoneDialerPage(tk.Tk):
         return complete
 
     def fillRecent(self):
-        #if self.checkDependencies():
+        if self.checkDependencies():
             a = str(subprocess.check_output(["termux-call-log", "-l", '4']))#['/bin/sh','/Volumes/Datos/_Projects/+python/PhoneDialer/termux-call-log']))#["termux-call-log", "-l", '4']))
             if a.__contains__('error'):
                 self.wait = EOFError(a)
