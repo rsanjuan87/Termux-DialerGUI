@@ -8,3 +8,4 @@ termux-telephony-call
 info.json
 ._*
 .vscode/*
+test.py
