@@ -69,7 +69,7 @@ class ContactsPage(tk.Tk):
         print(text)
 
     def fillContacts(self):
-        a = str(subprocess.check_output(utils.cmd_contact))
+        a = str(subprocess.check_output(utils.cmd_contact()))
         if a.__contains__('error'):
             self.wait = EOFError(a)
             utils.Utils.showError(self, a)

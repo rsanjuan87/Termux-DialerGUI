@@ -6,25 +6,41 @@ from config import *
 import os
 import subprocess
 
-recent4 = ['/bin/sh','termux-call-log']
-#recent4 = ["termux-call-log", "-l", '4']
+testing = True
 
-recent10 = ['/bin/sh','termux-call-log']
-#recent10 = ["termux-call-log", "-l", '10', '-o', str(self.offset)]
+def recent4():
+    if testing:
+        return ['/bin/sh','termux-call-log']
+    else:
+        return ["termux-call-log", "-l", '4']
 
-cmd_contact = ["/bin/sh","termux-contact-list"]
-#cmd_contact = [termux-contact-list"]
+def recent10(offset):
+    if testing:
+        return ['/bin/sh','termux-call-log']
+    else:
+        return ["termux-call-log", "-l", '10', '-o', str(offset)]
+
+def cmd_contact():
+    if testing:
+        return ["/bin/sh","termux-contact-list"]
+    else:
+        return ["termux-contact-list"]
 
 def cmd_call(num):
-    return ["/bin/sh", "termux-telephony-call", num]
-    return ["termux-telephony-call", num]
+    if testing:
+        return ["/bin/sh", "termux-telephony-call", num]
+    else:
+        return ["termux-telephony-call", num]
 
 def cmd_endCall():
-    return ["/bin/sh", "termux-telephony-call", '1']
-    return ["termux-telephony-call", '1']    
+    if testing:
+        return ["/bin/sh", "termux-telephony-call", '1']
+    else:
+        return ["termux-telephony-call", '1']    
 
 def checkDependencies(self):
-    return True #solo fake en MacOS
+    if testing:
+        return True
     "chek if needed dependecies are instaled and return if are satisfacied"
     deps = ['termux-telephony-call', 'termux-call-log']
     complete = True

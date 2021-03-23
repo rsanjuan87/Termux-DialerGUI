@@ -82,7 +82,7 @@ class RecentCallsPage(tk.Toplevel):
         print(text)
 
     def fillRecent(self):
-        a = str(subprocess.check_output(utils.recent10))
+        a = str(subprocess.check_output(utils.recent10(self.offset)))
         if a.__contains__('error'):
             self.wait = EOFError(a)
             utils.Utils.showError(self, a)

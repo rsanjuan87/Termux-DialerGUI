@@ -124,7 +124,7 @@ class PhoneDialerPage(tk.Tk):
 
     def fillRecent(self):
         if utils.checkDependencies(self):
-            a = str(subprocess.check_output(utils.recent4))
+            a = str(subprocess.check_output(utils.recent4()))
             if a.__contains__('error'):
                 self.wait = EOFError(a)
                 utils.Utils.showError(self, a)
