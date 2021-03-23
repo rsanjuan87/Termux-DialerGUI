@@ -82,7 +82,7 @@ class RecentCallsPage(tk.Toplevel):
         print(text)
 
     def fillRecent(self):
-        a = str(subprocess.check_output(["termux-call-log", "-l", '10', '-o', str(self.offset)]))#['/bin/sh','/Volumes/Datos/_Projects/+python/PhoneDialer/termux-call-log']))#["termux-call-log", "-l", '10', '-o', str(self.offset)]))
+        a = str(subprocess.check_output(utils.recent10))
         if a.__contains__('error'):
             self.wait = EOFError(a)
             utils.Utils.showError(self, a)

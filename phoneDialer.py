@@ -2,13 +2,13 @@
 import tkinter as tk
 from about import AboutMe
 from inCall import InCall
-import subprocess
-import os
 import utils as utils
+from utils import *
 from utils import MessageDialog
 from json import JSONDecoder, JSONDecodeError
 from recentCalls import RecentListView
 from recentCalls import RecentCallsPage
+from Contacts import ContactsPage
 
 
 class PhoneDialerPage(tk.Tk):
@@ -24,7 +24,10 @@ class PhoneDialerPage(tk.Tk):
         self.title('PhoneDialer')
         self.config(bg=utils.BACK)
 
-        self.lbl = tk.Label(self, text='Recent 4', anchor='e', bg=utils.BACK, fg='white', font=('Franklin Gothic Book', 14))
+        self.lbl = tk.Label(self, text='Recent 4', anchor='e', 
+                            bg=utils.BACK, fg='white', 
+                            font=('Franklin Gothic Book', 14),
+                            borderwidth=0)
         self.lbl.grid(row=0, columnspan=4, sticky='ew', padx=4, pady=2, )
 
         self.number = tk.Text(self, width=7, height=2, font=('Franklin Gothic Book', 12), bg=utils.BACK, fg=utils.FRONT)
@@ -32,36 +35,44 @@ class PhoneDialerPage(tk.Tk):
         
         self.std_btn(utils.BACKSPACE_TEXT, utils.BACK, 2, 2, fg=utils.FRONT)
     
-        self.std_btn("1", utils.FRONT, 3, 0), self.std_btn("2", utils.FRONT, 3, 1), self.std_btn("3", utils.FRONT, 3, 2), 
-        self.std_btn("4", utils.FRONT, 4, 0), self.std_btn("5", utils.FRONT, 4, 1), self.std_btn("6", utils.FRONT, 4, 2), 
-        self.std_btn("7", utils.FRONT, 5, 0), self.std_btn("8", utils.FRONT, 5, 1), self.std_btn("9", utils.FRONT, 5, 2), 
-        self.std_btn("*", utils.TAN, 6, 0), self.std_btn("0", utils.FRONT, 6, 1), self.std_btn("#", utils.TAN, 6, 2)
-        self.std_btn(utils.CONTACTS_TEXT, utils.TAN, 7, 0, font=('Franklin Gothic Book', 28), width=3, height=1), 
+        self.std_btn("1", utils.BACK, 3, 0), self.std_btn("2", utils.BACK, 3, 1), self.std_btn("3", utils.BACK, 3, 2), 
+        self.std_btn("4", utils.BACK, 4, 0), self.std_btn("5", utils.BACK, 4, 1), self.std_btn("6", utils.BACK, 4, 2), 
+        self.std_btn("7", utils.BACK, 5, 0), self.std_btn("8", utils.BACK, 5, 1), self.std_btn("9", utils.BACK, 5, 2), 
+        self.std_btn("*", utils.BACK, 6, 0), self.std_btn("0", utils.BACK, 6, 1), self.std_btn("#", utils.BACK, 6, 2)
+        self.std_btn(utils.CONTACTS_TEXT, utils.BACK, 7, 0, font=('Franklin Gothic Book', 28), width=3, height=1), 
         self.std_btn(utils.CALL_TEXT, utils.GREEN, 7, 1, font=('Franklin Gothic Book', 28), width=3, height=1), 
-        self.std_btn(utils.RECENT_TEXT, utils.TAN, 7, 2, font=('Franklin Gothic Book', 28), width=3, height=1)
+        self.std_btn(utils.RECENT_TEXT, utils.BACK, 7, 2, font=('Franklin Gothic Book', 28), width=3, height=1)
 
  
         self.number.focus_set() 
-        self.checkDependencies()
+        utils.checkDependencies(self)
 
         self.fillRecent()#row1
 
         #tests
 
+    def contacts(self):
+        """Application and license info"""
+        self.wait = ContactsPage()
+        self.wait.wait_window()
+        self.wait=None
+
     def about_me(self):
         """Application and license info"""
-        AboutMe(self)
+        self.wait = AboutMe(self)
 
     def close(self):
         """Close window"""
         self.destroy()
 
-    def std_btn(self, text, bg, row, col, width=7, height=2, font=('Franklin Gothic Book', 12), fg='black'):
-        btn = tk.Button(self, text=text, bg=bg, fg=fg, width=width, height=height, font=font, command=lambda: self.event_click(text))
-        return btn.grid(row=row, column=col, padx=4, pady=4)
+    def std_btn(self, text, bg, row, col, width=5, height=2, font=('Franklin Gothic Book', 24), fg='white'):
+        btn = tk.Label(self, text=text, anchor='center', bg=bg, fg=fg, font= font, width=width, height= height)
+        btn.bind("<Button-1>", func=lambda event: self.event_click(text))
+        btn.grid(row=row, column=col, padx=4, pady=4)
+        return btn
 
     def event_click(self, event):
-        if self.checkDependencies() and self.wait == None:
+        if utils.checkDependencies(self) and self.wait == None:
             if event in [utils.BACKSPACE_TEXT]:
                 self.back_space()
             if event in ['0','1','2','3','4','5','6','7','8','9','*','#']:
@@ -71,7 +82,7 @@ class PhoneDialerPage(tk.Tk):
             if event == utils.RECENT_TEXT:
                 self.recent()
             if event == utils.CONTACTS_TEXT:
-                self.about_me()
+                self.contacts()
 
     def favClic(self, text):
         print(text)
@@ -99,7 +110,7 @@ class PhoneDialerPage(tk.Tk):
 
     def call_number(self):
         num = self.number.get(1.0, tk.END).replace('\n', '')
-        a = subprocess.check_output(["termux-telephony-call", num])
+        a = subprocess.check_output(utils.cmd_call(num))
         if len(a)<=1 or a.__contains__('error'):
             self.wait = InCall(self,num )
             self.fillRecent()
@@ -110,25 +121,10 @@ class PhoneDialerPage(tk.Tk):
     def recent(self):
         self.wait = RecentCallsPage(self) 
         self.fillRecent()
-   
-    def checkDependencies(self):
-        "chek if needed dependecies are instaled and return if are satisfacied"
-        deps = ['termux-telephony-call', 'termux-call-log']
-        complete = True
-        pref = ''
-        if not os.getenv('PREFIX') == None :
-            pref = os.getenv('PREFIX') 
-        for d in deps:
-            if not os.path.isfile(pref+'/bin/'+d):
-                complete = False
-                break
-        if not complete and self.wait == None:
-            self.wait = MessageDialog(self, 'Please Use Termux For This Caller\nMake Sure You Installed Termux:API\n\tpkg install termux-api',  'Error', )
-        return complete
 
     def fillRecent(self):
-        if self.checkDependencies():
-            a = str(subprocess.check_output(["termux-call-log", "-l", '4']))#['/bin/sh','/Volumes/Datos/_Projects/+python/PhoneDialer/termux-call-log']))#["termux-call-log", "-l", '4']))
+        if utils.checkDependencies(self):
+            a = str(subprocess.check_output(utils.recent4))
             if a.__contains__('error'):
                 self.wait = EOFError(a)
                 utils.Utils.showError(self, a)

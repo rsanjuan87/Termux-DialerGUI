@@ -3,7 +3,41 @@ import tkinter as tk
 from tkinter.ttk import Separator
 import pathlib
 from config import *
+import os
+import subprocess
 
+recent4 = ['/bin/sh','termux-call-log']
+#recent4 = ["termux-call-log", "-l", '4']
+
+recent10 = ['/bin/sh','termux-call-log']
+#recent10 = ["termux-call-log", "-l", '10', '-o', str(self.offset)]
+
+cmd_contact = ["/bin/sh","termux-contact-list"]
+#cmd_contact = [termux-contact-list"]
+
+def cmd_call(num):
+    return ["/bin/sh", "termux-telephony-call", num]
+    return ["termux-telephony-call", num]
+
+def cmd_endCall():
+    return ["/bin/sh", "termux-telephony-call", '1']
+    return ["termux-telephony-call", '1']    
+
+def checkDependencies(self):
+    return True #solo fake en MacOS
+    "chek if needed dependecies are instaled and return if are satisfacied"
+    deps = ['termux-telephony-call', 'termux-call-log']
+    complete = True
+    pref = ''
+    if not os.getenv('PREFIX') == None :
+        pref = os.getenv('PREFIX') 
+    for d in deps:
+        if not os.path.isfile(pref+'/bin/'+d):
+            complete = False
+            break
+    if not complete and self.wait == None:
+        self.wait = MessageDialog(self, 'Please Use Termux For This Caller\nMake Sure You Installed Termux:API\n\tpkg install termux-api',  'Error', )
+    return complete
 
 
 class Utils():
@@ -40,6 +74,37 @@ class TestWindow(tk.Tk):
 
 def clean(text):
     return text.replace('b\'', '').replace('\\n\'','').replace('\\r','').replace('\\','\\\\').replace('\\\\n','\n').replace('\\\\"','\\"')
+
+class ScrollFrame(tk.Frame):
+    def __init__(self, parent, bg='white', height=500, width=200):
+        super().__init__(parent) # create a frame (self)
+
+        self.canvas = tk.Canvas(self, borderwidth=0, background=bg)          #place canvas on self
+        self.viewPort = tk.Frame(self.canvas, background=bg)                    #place a frame on the canvas, this frame will hold the child widgets 
+        self.vsb = tk.Scrollbar(self, orient="vertical", command=self.canvas.yview) #place a scrollbar on self 
+        self.canvas.configure(yscrollcommand=self.vsb.set)                          #attach scrollbar action to scroll of canvas
+
+        self.vsb.pack(side="right", fill="y")                                       #pack scrollbar to right of self
+        self.canvas.pack(side="left", fill="both", expand=True)                     #pack canvas to left of self and expand to fil
+        self.canvas_window = self.canvas.create_window((0,0), window=self.viewPort, anchor="nw",            #add view port frame to canvas
+                                  tags="self.viewPort")
+
+        self.viewPort.bind("<Configure>", self.onFrameConfigure)                       #bind an event whenever the size of the viewPort frame changes.
+        self.canvas.bind("<Configure>", self.onCanvasConfigure)                       #bind an event whenever the size of the viewPort frame changes.
+
+        self.onFrameConfigure(None)           
+        self.canvas.config( height=height, width=width)                                      #perform an initial stretch on render, otherwise the scroll region has a tiny border until the first resize
+
+    def onFrameConfigure(self, event):                                              
+        '''Reset the scroll region to encompass the inner frame'''
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))                 #whenever the size of the frame changes, alter the scroll region respectively.
+
+    def onCanvasConfigure(self, event):
+        '''Reset the canvas window to encompass inner frame when required'''
+        canvas_width = event.width
+        self.canvas.itemconfig(self.canvas_window, width = canvas_width)            #whenever the size of the canvas changes alter the window region respectively.
+
+
 
 
 if __name__ == '__main__':

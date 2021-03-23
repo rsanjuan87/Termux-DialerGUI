@@ -5,7 +5,8 @@ TAN = "#F1EABC" # black/tan
 GREEN = "#00AA00" # green
 RED = '#AA0000'
 
-CALL_TEXT="✆"
+CALL_TEXT=" ✆ "
+SMS_TEXT=" ✉︎ "
 RECENT_TEXT='⇳'
 CONTACTS_TEXT='☺︎'
 BACKSPACE_TEXT = '⌫'
