@@ -87,7 +87,7 @@ class RecentCallsPage(tk.Toplevel):
             self.wait = EOFError(a)
             utils.Utils.showError(self, a)
         else:
-            a=a.replace('b\'', '').replace('\\n\'','').replace('\\n','').replace('\\','\\\\')
+            a=utils.clean(a)
             self.lista = RecentListView(self, a, row=1, bg=utils.BACK, fg='white', onClick = lambda text: self.setNumber(text))
             
     def setNumber(self, text):
@@ -97,7 +97,6 @@ class RecentCallsPage(tk.Toplevel):
 
 
 if __name__ == '__main__':
-    s = TestWindow()
-    RecentCallsPage(s)
+    s = RecentCallsPage(tk.Tk())
     s.mainloop()           
     

@@ -36,9 +36,9 @@ class PhoneDialerPage(tk.Tk):
         self.std_btn("4", utils.FRONT, 4, 0), self.std_btn("5", utils.FRONT, 4, 1), self.std_btn("6", utils.FRONT, 4, 2), 
         self.std_btn("7", utils.FRONT, 5, 0), self.std_btn("8", utils.FRONT, 5, 1), self.std_btn("9", utils.FRONT, 5, 2), 
         self.std_btn("*", utils.TAN, 6, 0), self.std_btn("0", utils.FRONT, 6, 1), self.std_btn("#", utils.TAN, 6, 2)
-        self.std_btn(utils.ABOUT_TEXT, utils.TAN, 7, 0), 
-        self.std_btn(utils.CALL_TEXT, utils.GREEN, 7, 1), 
-        self.std_btn(utils.RECENT_TEXT, utils.TAN, 7, 2)
+        self.std_btn(utils.CONTACTS_TEXT, utils.TAN, 7, 0, font=('Franklin Gothic Book', 28), width=3, height=1), 
+        self.std_btn(utils.CALL_TEXT, utils.GREEN, 7, 1, font=('Franklin Gothic Book', 28), width=3, height=1), 
+        self.std_btn(utils.RECENT_TEXT, utils.TAN, 7, 2, font=('Franklin Gothic Book', 28), width=3, height=1)
 
  
         self.number.focus_set() 
@@ -70,7 +70,7 @@ class PhoneDialerPage(tk.Tk):
                 self.call_number()
             if event == utils.RECENT_TEXT:
                 self.recent()
-            if event == utils.ABOUT_TEXT:
+            if event == utils.CONTACTS_TEXT:
                 self.about_me()
 
     def favClic(self, text):
@@ -133,7 +133,7 @@ class PhoneDialerPage(tk.Tk):
                 self.wait = EOFError(a)
                 utils.Utils.showError(self, a)
             else:
-                a=a.replace('b\'', '').replace('\\n\'','').replace('\\n','').replace('\\','\\\\')
+                a=utils.clean(a)
                 RecentListView(self, a, row=1, bg=utils.BACK, fg=utils.FRONT, onClick = lambda text: self.number.replace(1.0, tk.END, text))
 
 

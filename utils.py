@@ -37,10 +37,9 @@ class TestWindow(tk.Tk):
     """A window used for testing the various module dialogs"""
     def __init__(self):
         super().__init__()
-        self.title('Testing Window')
-        self.text = tk.Text(self)
-        self.text.pack(fill=tk.BOTH, expand=tk.YES)
-        self.text.insert(tk.END, 'This is a test. This is only a test.')
+
+def clean(text):
+    return text.replace('b\'', '').replace('\\n\'','').replace('\\r','').replace('\\','\\\\').replace('\\\\n','\n').replace('\\\\"','\\"')
 
 
 if __name__ == '__main__':
