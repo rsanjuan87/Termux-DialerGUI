@@ -46,7 +46,14 @@ class ContactsPage(tk.Tk):
         self.title('Contacts')
         self.config(bg=utils.BACK)
 
-        self.scrollFrame = ScrollFrame(self, bg=utils.BACK) # add a new scrollable frame.
+
+        self.frameOne = tk.Text(self, height=1, width=30, bg=utils.BACK, fg=utils.FRONT)
+        self.frameOne.grid(row=0,column=0)
+
+        self.frameTwo = tk.Frame(self.master)
+        self.frameTwo.grid(row=1, column=0)
+
+        self.scrollFrame = ScrollFrame(self.frameTwo, bg=utils.BACK) # add a new scrollable frame.
         
         # Now add some controls to the scrollframe. 
         # NOTE: the child controls are added to the view port (scrollFrame.viewPort, NOT scrollframe itself)
