@@ -7,4 +7,4 @@ termux-api
 python.tkinter
 
 
-### <a href="https://user-images.githubusercontent.com/25087943/112320210-3012a780-8c85-11eb-8066-f656e2997ed3.png" target="_blanc">preview</a>
+### <a href="https://user-images.githubusercontent.com/25087943/112320210-3012a780-8c85-11eb-8066-f656e2997ed3.png" target="_blank">preview</a>
